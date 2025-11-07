@@ -15,8 +15,4 @@ makeBoard = [[],[],[],[],[],[],[]]
 
 -- Story 5 "print the current connect 4 board"
 printBoard :: Game -> String
-printBoard (board, turn) = unlines $ map (concatMap showColor) (transpose board)
-  where
-    showColor Red = "R "
-    showColor Yellow = "Y "
-    showColor _ = ". "
+printBoard = undefined
