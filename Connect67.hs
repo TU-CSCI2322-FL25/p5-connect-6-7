@@ -1,3 +1,5 @@
+import Data.List (transpose)
+
 data Color = Red | Yellow deriving (Show,Eq) -- color
 
 type Board = [[Color]] -- list of columns of colors
@@ -13,4 +15,8 @@ makeBoard = [[],[],[],[],[],[],[]]
 
 -- Story 5 "print the current connect 4 board"
 printBoard :: Game -> String
-printBoard = undefined
+printBoard (board, turn) = unlines $ map (concatMap showColor) (transpose board)
+  where
+    showColor Red = "R "
+    showColor Yellow = "Y "
+    showColor _ = ". "
