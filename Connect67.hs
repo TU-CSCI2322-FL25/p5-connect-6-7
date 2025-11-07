@@ -1,12 +1,12 @@
---data Tile = Space Color | Empty deriving (Show,Eq)
-data Turn = Player Color deriving (Show,Eq)
+data Turn = Player Color deriving (Show,Eq) -- plaayer
 
-data Color = Red | Yellow deriving (Show,Eq)
+data Color = Red | Yellow deriving (Show,Eq) -- color
 
-type Board = [[Color]]
+type Board = [[Color]] -- list of columns of colors
 
+type Winner = Turn -- Player and color
 
+type Move = (Integer, Turn) -- column number, color
 
-
-makeBoard :: Board
+makeBoard :: Board -- make empty board
 makeBoard = [[],[],[],[],[],[],[]]
