@@ -10,3 +10,7 @@ type Game = (Board, Color)
 
 makeBoard :: Board -- make empty board 
 makeBoard = [[],[],[],[],[],[],[]]
+
+-- Story 5 "print the current connect 4 board"
+printBoard :: Game -> String
+printBoard = undefined
