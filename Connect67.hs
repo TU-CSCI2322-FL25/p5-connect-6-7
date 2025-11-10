@@ -39,3 +39,9 @@ checkHorizontal (board, color) = undefined
 
 checkDiagonal :: Game -> Winner
 checkDiagonal = undefined
+
+
+-- Story 4 "Compute the legal moves from a game state, with a function of type Game -> [Move]."
+legalMoves :: Game -> [Move]
+legalMoves (board, turn) = [ind | (column, ind) <- assocBoard board, length column/=6]
+assocBoard board = zip board [0,1..]
