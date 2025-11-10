@@ -20,7 +20,7 @@ printGame (board,turn) = unlines (("It's " ++ (show turn) ++ "\'s turn and the b
     colsToRows = transpose filled
     filled = [take 6 (ufc++"0000000")|ufc<-unfilled]
     unfilled = [[if color == Red then 'R' else 'Y'|color<-column]|column<-board]
-
+ 
 testGame :: Game
 testGame = (testBoard,Red)
 
