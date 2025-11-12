@@ -1,4 +1,7 @@
-import data.Maybe
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use !!" #-}
+{-# HLINT ignore "Redundant bracket" #-}
+import Data.Maybe
 
 data Color = Red | Yellow deriving (Show,Eq) -- color
 
@@ -15,27 +18,34 @@ makeBoard = [[],[],[],[],[],[],[]]
 
 
 
-headMaybe :: [a] -> Maybe a
-headMaybe [] = Nothing
-headMaybe
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x:xs) = Just x
 
--- test
+
+
+checkList :: [Maybe Color] -> Integer -> Winner
+checkList [x] counter = if counter >=4 then x else Nothing
+checkList [] counter = Nothing
+checkList (x:xs) counter
+    | counter >= 4 = x
+    | x == head xs = checkList xs (counter+1)
+    | otherwise = checkList xs 1
 
 checkWin :: Game -> Winner
-checkWin (board, color) = undefined
+checkWin (board, color) = safeHead $ catMaybes [checkVertical board, checkHorizontal board, checkPDiagonal board, checkNDiagonal board]
 
-checkVertical :: Game -> Winner
-checkVertical (board, _) = let win = catMaybes [aux column 0 | column <- board]
-                           in if null win then Nothing else head win
-                                where aux [] _ = Nothing
-                                      aux [x] counter = if counter >=4 then Just x else Nothing
-                                      aux (x:xs) counter = if counter >= 4 then Just x 
-                                                           else if x == head xs then aux xs (counter+1) else aux xs 0
+checkVertical :: Board -> Winner
+checkVertical board = let win = catMaybes [checkList (map Just column) 1 | column <- board]
+                           in safeHead win
 
-checkHorizontal :: Game -> Winner
-checkHorizontal (board, color) = undefined
+checkHorizontal :: Board -> Winner
+checkHorizontal board = let win = catMaybes [checkList (map listToMaybe layer) 1 | layer <- [map (drop n) board | n <- [0..6]]] 
+                                 in safeHead win
 
+checkPDiagonal :: Board -> Winner
+checkPDiagonal board = let win = catMaybes [checkList ([safeHead $ drop n column | (column, n) <- zip (drop p board) [i..]]) 1 | i <- [0..2], p <- [0..3]]
+                               in safeHead win
 
-
-checkDiagonal :: Game -> Winner
-checkDiagonal = undefined
+checkNDiagonal :: Board -> Winner
+checkNDiagonal board = checkPDiagonal (reverse board)
