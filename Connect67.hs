@@ -16,8 +16,8 @@ makeBoard = [[],[],[],[],[],[],[]]
 rowsEmpty :: Board -> Bool
 rowsEmpty = all null
 
-updateBoardRows :: Board -> Color -> Board
-updateBoardRows b move color
+updateBoardRows :: Board -> Move -> Color -> Board
+updateBoardRows board move color
     | move < 0 || move >= fromIntegral (length board) = board 
     | length (board !! colIndex) >= 6 = board
     | otherwise = take colIndex board ++ [updatedColumn] ++ drop (colIndex + 1) board
@@ -25,5 +25,3 @@ updateBoardRows b move color
         colIndex = fromIntegral move
         column = board !! colIndex
         updatedColumn = color : column
-
-
