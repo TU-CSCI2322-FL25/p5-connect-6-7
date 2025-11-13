@@ -32,7 +32,7 @@ safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
 safeHead (x:xs) = Just x
 
-checkList :: [Maybe Color] -> Integer -> Winner
+checkList :: [Maybe Color] -> Integer -> Winner -- take a list of colors, ex a column, and return just the color if there are 4 in a row or nothing.
 checkList [x] counter = if counter >=4 then x else Nothing
 checkList [] counter = Nothing
 checkList (x:xs) counter
@@ -40,8 +40,8 @@ checkList (x:xs) counter
     | x == head xs = checkList xs (counter+1)
     | otherwise = checkList xs 1
 
-checkWin :: Game -> Winner
-checkWin (board, color) = safeHead $ catMaybes [checkVertical board, checkHorizontal board, checkPDiagonal board, checkNDiagonal board]
+checkWin :: Game -> Winner-- run functions to check all columns, rows, and diagonals.
+checkWin (board, color) = safeHead $ catMaybes [checkVertical board, checkHorizontal board, checkPDiagonal board, checkNDiagonal board] 
 
 checkVertical :: Board -> Winner
 checkVertical board = let win = catMaybes [checkList (map Just column) 1 | column <- board]
