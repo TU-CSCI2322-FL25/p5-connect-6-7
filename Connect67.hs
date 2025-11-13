@@ -15,6 +15,18 @@ type Game = (Board, Color)
 makeBoard :: Board -- make empty board 
 makeBoard = [[],[],[],[],[],[],[]]
 
+--Story 3
+
+updateBoardRows :: Board -> Move -> Color -> Board
+updateBoardRows board move color
+    | move < 0 || move >= fromIntegral (length board) = board 
+    | length (board !! colIndex) >= 6 = board
+    | otherwise = take colIndex board ++ [updatedColumn] ++ drop (colIndex + 1) board
+    where
+        colIndex = fromIntegral move
+        column = board !! colIndex
+        updatedColumn = color : column
+        
 -- Story 2: Check the board for a winner
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
