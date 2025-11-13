@@ -13,9 +13,6 @@ makeBoard = [[],[],[],[],[],[],[]]
 
 --Story 3
 
-rowsEmpty :: Board -> Bool
-rowsEmpty = all null
-
 updateBoardRows :: Board -> Move -> Color -> Board
 updateBoardRows board move color
     | move < 0 || move >= fromIntegral (length board) = board 
