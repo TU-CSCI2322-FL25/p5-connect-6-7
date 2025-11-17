@@ -6,9 +6,7 @@ data Color = Red | Yellow deriving (Show,Eq) -- color
 
 type Board = [[Color]] -- list of columns of colors
 
-data Winner = Tie | Ongoing | Player Color deriving (Show,Eq)
-
---type Winner = Maybe Color -- Player and color
+data Winner = Tie | Player Color deriving (Show,Eq)
 
 type Move = Integer -- column number, color
 
@@ -34,10 +32,10 @@ checkList (x:xs) counter
     | x == head xs = checkList xs (counter+1)
     | otherwise = checkList xs 1
 
-checkWin :: Game -> Winner  -- run functions to check all columns, rows, and diagonals.
+checkWin :: Game -> Maybe Winner  -- run functions to check all columns, rows, and diagonals.
 checkWin (board, color) = case safeHead $ catMaybes [checkVertical board, checkHorizontal board, checkPDiagonal board, checkNDiagonal board] of
-                            Just x -> Player x
-                            _ -> if null $ legalMoves (board, color) then Tie else Ongoing
+                            Just x -> Just $ Player x
+                            _ -> if null $ legalMoves (board, color) then Just Tie else Nothing
 
 checkVertical :: Board -> Maybe Color
 checkVertical board = let win = catMaybes [checkList (map Just column) 1 | column <- board]
