@@ -15,8 +15,24 @@ type Game = (Board, Color)
 makeBoard :: Board -- make empty board 
 makeBoard = [[],[],[],[],[],[],[]]
 
+--Story 3
+opponent :: Color -> Color
+opponent Red    = Yellow
+opponent Yellow = Red
 
-        
+updateGame :: Move -> Game -> Game
+updateGame move game@(board, color)
+    | m < 0 || m >= length board = game        -- invalid move
+    | length col >= 6            = game        -- column full
+    | otherwise =
+        ( before ++ [col ++ [color]] ++ after  -- place piece bottom-up
+        , opponent color                       -- next player
+        )
+  where
+    m = fromInteger move
+    (before, col:after) = splitAt m board
+
+
 -- Story 2: Check the board for a winner
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
@@ -52,18 +68,6 @@ checkPDiagonal board = let win = catMaybes [checkList ([safeHead $ drop n column
 checkNDiagonal :: Board -> Maybe Color
 checkNDiagonal board = checkPDiagonal (reverse board)
 
-
---Story 3
-
-updateBoardRows :: Board -> Move -> Color -> Board
-updateBoardRows board move color
-    | move < 0 || move >= fromIntegral (length board) = board 
-    | length (board !! colIndex) >= 6 = board
-    | otherwise = take colIndex board ++ [updatedColumn] ++ drop (colIndex + 1) board
-    where
-        colIndex = fromIntegral move
-        column = board !! colIndex
-        updatedColumn = color : column
 
 -- Story 4 "Compute the legal moves from a game state, with a function of type Game -> [Move]."
 legalMoves :: Game -> [Move]
