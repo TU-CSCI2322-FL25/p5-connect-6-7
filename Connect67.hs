@@ -113,4 +113,4 @@ scoreOutcome _ Tie = 0
 --Story 10 best Move
 bestMove :: Game -> Maybe Move
 bestMove game@(board,color) = if isJust (checkWin game) then Nothing 
-  else Just (snd (maximum [(scoreOutcome color (whoWillWin (updateGame game move)),move)|move<-legalMoves game]))
+  else Just (snd (minimum [(scoreOutcome color (whoWillWin (updateGame game move)),move)|move<-legalMoves game]))
