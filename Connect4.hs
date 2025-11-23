@@ -1,8 +1,6 @@
-import Data.Maybe
-import Data.List (transpose)
-import System.Environment (getArgs)
+module Connect4 where
 
---file with all code not split up
+import Data.Maybe
 
 -- Story 1: Define data types or type aliases for a player, game state, move, and winner
 data Color = Red | Yellow deriving (Show,Eq) -- color
@@ -66,79 +64,3 @@ updateBoard (x:xs,color) move c = if move==c then (x++[color]):xs else x:updateB
 legalMoves :: Game -> [Move]
 legalMoves (board, turn) = [ind | (column, ind) <- assocBoard board, length column/=6]
 assocBoard board = zip board [0,1..]
-
--- Story 5 "Pretty-print a game into a string"
--- use "printStrLn &" in ghci to see the actual board with the \n as actual new lines
-printGame :: Game -> String
-printGame (board,turn) = unlines (("It's " ++ show turn ++ "\'s turn and the board is:"):reverse colsToRows)
-  where
-    colsToRows = transpose filled
-    filled = [take 6 (ufc++"0000000")|ufc<-unfilled]
-    unfilled = [[if color == Red then 'R' else 'Y'|color<-column]|column<-board]
-
---Story9 find winner
-whoWillWin :: Game -> Winner
-whoWillWin game@(board,color) = case checkWin game of
-  Just x -> x
-  Nothing -> if null moves then Tie
-    else scoreToWinner color (maximum (map ((scoreOutcome color . whoWillWin) . updateGame game) moves))
-  where moves = legalMoves game
-
-scoreToWinner c s
-  | s == 1  = Player c
-  | s == 0  = Tie
-  | s == -1 = if c == Red then Player Yellow else Player Red
-
-scoreOutcome c (Player winner)
-  | winner == c = 1
-  | otherwise   = -1
-scoreOutcome _ Tie = 0
-
---Story 10 finds a move that forces a win and returns it if it can
---if none do, returns a move that can force a tie, if none do that either or the game is over, returns nothing
-bestMove :: Game -> Maybe Move
-bestMove game@(board,color) = if isJust (checkWin game) || bestScore == -1 then Nothing else Just move
-  where (bestScore,move) = maximum [(scoreOutcome color (whoWillWin (updateGame game move)),move)|move<-legalMoves game]
-
---Story 12 read the game from format in test1.csv
-readGame :: String -> Game
-readGame str = ([map toColor (words col)|col<-cols],toColor turn)
-  where
-    (turn:cols) = lines str
-    toColor s = if s == "Red" then Red else Yellow
-
---Story 13 turn the game into the format in test1.csv
-showGame :: Game -> String
-showGame (board,turn) = show turn ++ "\n" ++ unlines [unwords (map toStr col)|col<-board]
-  where toStr c = if c==Red then "Red" else "Yellow"
-
---Story 14 
-writeGame :: Game -> FilePath -> IO ()
-writeGame game path = writeFile path (showGame game)
-
-loadGame :: FilePath -> IO Game
-loadGame path = do
-  contents <- readFile path
-  pure (readGame contents)
-
-putBestMove :: Game -> IO ()
-putBestMove game = case bestMove game of
-  Nothing -> putStrLn "No winning or drawing move available, or the game is already over."
-  Just m  -> do
-    let nextGame = updateGame game m
-    let outcome = whoWillWin nextGame
-    putStrLn $ "Best move: column " ++ show m
-    putStrLn $ "This move forces: " ++ (if outcome==Tie then "a tie" else show outcome ++ " to win")
-
-main :: IO ()
-main = do
-  args <- getArgs
-  path <- case args of
-    (p:_) -> pure p
-    _     -> do
-      putStrLn "Enter game file to load:"
-      getLine
-  game <- loadGame path
-  putStrLn "Loaded game:"
-  putStrLn (printGame game)
-  putBestMove game
