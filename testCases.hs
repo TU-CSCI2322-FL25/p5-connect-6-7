@@ -128,11 +128,13 @@ testMakeMoveAndConversion = do
   putStrLn gameStr
 
   putStrLn "Game loaded from string (readGame):"
-  let loadedGame = readGame gameStr
-  putStrLn $ printGame loadedGame
-  
-  putStrLn "Verify updateGame is correct:"
-  print $ gameAfterMove == loadedGame
+  let maybeGame = readGame gameStr
+  case maybeGame of 
+    Nothing -> putStrLn "invalid file name"
+    Just loadedGame -> 
+      do putStrLn $ printGame loadedGame
+         putStrLn "Verify updateGame is correct:"
+         print $ gameAfterMove == loadedGame
 
 --story 17
 testRateGame :: IO ()
