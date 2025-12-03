@@ -134,6 +134,26 @@ testMakeMoveAndConversion = do
   putStrLn "Verify updateGame is correct:"
   print $ gameAfterMove == loadedGame
 
+--story 17
+testRateGame :: IO ()
+testRateGame = do
+  putStrLn "Testing rateGame function (Story 17)"
+  
+  putStrLn "Rating of finishedGameRedWins:"
+  print $ rateGame finishedGameRedWins
+ 
+  putStrLn "Rating of finishedGameTie:"
+  print $ rateGame finishedGameTie
+ 
+  putStrLn "Rating of oneMoveFromEndRedWins:"
+  print $ rateGame oneMoveFromEndRedWins
+ 
+  putStrLn "Rating of twoMovesFromEndRedWins:"
+  print $ rateGame twoMovesFromEndRedWins
+  
+  putStrLn "Rating of fourMovesFromEndTie:"
+  print $ rateGame fourMovesFromEndTie
+
 
 runAllTests :: IO ()
 runAllTests = do
@@ -142,3 +162,4 @@ runAllTests = do
   testWhoWillWin
   testBestMove
   testMakeMoveAndConversion
+  testRateGame
