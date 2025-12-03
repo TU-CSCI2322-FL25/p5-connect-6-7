@@ -10,7 +10,7 @@ writeGame game path = writeFile path (showGame game)
 loadGame :: FilePath -> IO Game
 loadGame path = do
   contents <- readFile path
-  pure (readGame contents)
+  return (readGame contents)
 
 putBestMove :: Game -> IO ()
 putBestMove game = case bestMove game of

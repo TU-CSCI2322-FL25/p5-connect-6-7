@@ -8,7 +8,7 @@ main :: IO ()
 main = do
   args <- getArgs
   path <- case args of
-    (p:_) -> pure p
+    (p:_) -> return p
     _     -> do
       putStrLn "Enter game file to load:"
       getLine
