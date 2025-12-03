@@ -12,7 +12,10 @@ main = do
     _     -> do
       putStrLn "Enter game file to load:"
       getLine
-  game <- loadGame path
-  putStrLn "Loaded game:"
-  putStrLn (printGame game)
-  putBestMove game
+  maybeGame <- loadGame path
+  case maybeGame of 
+    Nothing -> putStrLn "invalid file name"
+    Just game -> 
+      do  putStrLn "Loaded game:"
+          putStrLn (printGame game)
+          putBestMove game
