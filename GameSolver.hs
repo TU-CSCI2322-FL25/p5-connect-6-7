@@ -24,5 +24,5 @@ scoreOutcome _ Tie = 0
 --Story 10 finds a move that forces a win and returns it if it can
 --if none do, returns a move that can force a tie, if none do that either or the game is over, returns nothing
 bestMove :: Game -> Maybe Move
-bestMove game@(board,color) = if isJust (checkWin game) || bestScore == -1 then Nothing else Just move
+bestMove game@(board,color) = if isJust (checkWin game) then Nothing else Just move
   where (bestScore,move) = maximum [(scoreOutcome color (whoWillWin (updateGame game move)),move)|move<-legalMoves game]
