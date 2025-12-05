@@ -1,6 +1,7 @@
 import Data.Maybe
 import Data.List (transpose)
 import System.Environment (getArgs)
+import Data.List (maximumBy, minimumBy)
 
 --file with all code not split up
 
@@ -142,3 +143,44 @@ main = do
   putStrLn "Loaded game:"
   putStrLn (printGame game)
   putBestMove game
+
+--Story 17 return integer estimate based off game's state 
+--evaluation should return a positive value for red and negative for yellow
+
+rateGame :: Game -> Rating
+rateGame g
+  | checkWin g == Just (Player Red)    = bigWin   -- Red wins
+  | checkWin g == Just (Player Yellow) = bigLoss  -- Yellow wins
+  | otherwise                          = pieceDifference (fst g)
+  where
+    bigWin  =  1000000 :: Integer -- must be larger than a non endgame
+    bigLoss = -1000000 :: Integer
+
+--helper to get the difference in pieces on board
+pieceDifference :: Board -> Rating
+pieceDifference board = count Red board - count Yellow board
+  where
+    count c b = toInteger $ length [rowElem | column <- b, rowElem <- column, rowElem == c]
+
+--story 18 cut of depth
+whoWillWinDepth :: Game -> Int -> (Rating, Maybe Move)
+whoWillWinDepth game depth = bestOutcome game depth
+  where
+    bestOutcome :: Game -> Int -> (Rating, Maybe Move)
+    bestOutcome g@(board, currentColor) d
+      | d == 0 = (rateGame g, Nothing)  -- Depth cutoff
+      | otherwise = case checkWin g of
+          Just Tie -> (0, Nothing)
+          Just (Player winner) -> if winner == currentColor then (1, Nothing) else (-1, Nothing)
+          Nothing ->
+            if null moves
+              then (0, Nothing)  -- No moves means tie
+              else if currentColor == Red  -- Red tries to maximize, Yellow tries to minimize
+                then maximumBy compareRating [(fst (bestOutcome (updateGame g move) (d - 1)), Just move) | move <- moves]
+                else minimumBy compareRating [(fst (bestOutcome (updateGame g move) (d - 1)), Just move) | move <- moves]
+      where
+        moves = legalMoves g
+        evalGame = rateGame g
+
+compareRating :: (Rating, Maybe Move) -> (Rating, Maybe Move) -> Ordering
+compareRating (rating1, _) (rating2, _) = compare rating1 rating2
