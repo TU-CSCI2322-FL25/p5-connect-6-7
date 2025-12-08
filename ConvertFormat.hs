@@ -13,11 +13,19 @@ printGame (board,turn) = unlines (("It's " ++ show turn ++ "\'s turn and the boa
     unfilled = [[if color == Red then 'R' else 'Y'|color<-column]|column<-board]
 
 --Story 12 read the game from format in test1.csv
-readGame :: String -> Game
-readGame str = ([map toColor (words col)|col<-cols],toColor turn)
+readGame :: String -> Maybe Game
+readGame str =
+  case lines str of
+    [] -> Nothing
+    (turnStr:colStrs) -> 
+        do turn <- toColor turnStr
+           board <- sequence [sequence (map toColor (words col))|col<-colStrs]
+           return (board, turn)
   where
-    (turn:cols) = lines str
-    toColor s = if s == "Red" then Red else Yellow
+    toColor s
+      | s=="Red" = Just Red
+      | s=="Yellow" = Just Yellow
+      | otherwise = Nothing
 
 --Story 13 turn the game into the format in test1.csv
 showGame :: Game -> String

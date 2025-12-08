@@ -7,10 +7,11 @@ import GameSolver
 writeGame :: Game -> FilePath -> IO ()
 writeGame game path = writeFile path (showGame game)
 
-loadGame :: FilePath -> IO Game
+loadGame :: FilePath -> IO (Maybe Game)
 loadGame path = do
   contents <- readFile path
-  return (readGame contents)
+  let rContents = readGame contents
+  return rContents
 
 putBestMove :: Game -> IO ()
 putBestMove game = case bestMove game of

@@ -13,6 +13,8 @@ type Move = Integer -- column number, color
 
 type Game = (Board, Color)
 
+type Rating = Integer
+
 makeBoard :: Board -- make empty board 
 makeBoard = [[],[],[],[],[],[],[]]
 
