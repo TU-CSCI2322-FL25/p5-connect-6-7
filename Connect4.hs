@@ -66,21 +66,3 @@ updateBoard (x:xs,color) move c = if move==c then (x++[color]):xs else x:updateB
 legalMoves :: Game -> [Move]
 legalMoves (board, turn) = [ind | (column, ind) <- assocBoard board, length column/=6]
 assocBoard board = zip board [0,1..]
-
---Story 17 return integer estimate based off game's state 
---evaluation should return a positive value for red and negative for yellow
-
-rateGame :: Game -> Rating
-rateGame g
-  | checkWin g == Just (Player Red)    = bigWin   -- Red wins
-  | checkWin g == Just (Player Yellow) = bigLoss  -- Yellow wins
-  | otherwise                          = pieceDifference (fst g)
-  where
-    bigWin  =  1000000 :: Integer -- must be larger than a non endgame
-    bigLoss = -1000000 :: Integer
-
---helper to get the difference in pieces on board
-pieceDifference :: Board -> Rating
-pieceDifference board = count Red board - count Yellow board
-  where
-    count c b = toInteger $ length [rowElem | column <- b, rowElem <- column, rowElem == c]
