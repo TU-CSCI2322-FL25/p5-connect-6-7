@@ -61,46 +61,139 @@ fourMovesFromEndTie =
     , [Yellow, Red, Yellow, Red, Yellow, Red]
     ], Red)
 
+sixMovesFromBeginning :: Game
+sixMovesFromBeginning =
+  ( [ [Red, Yellow]
+    , [Yellow, Red]
+    , [Red]
+    , [Yellow]
+    , []
+    , []
+    , []
+    ], Yellow )
+
+sevenMovesFromBeginning :: Game
+sevenMovesFromBeginning =
+  ( [ [Red, Yellow]
+    , [Yellow, Red]
+    , [Red]
+    , [Yellow]
+    , []
+    , []
+    , []
+    ], Yellow )
+
+redAdvantage :: Game
+redAdvantage =
+  ( [ [Red, Yellow, Red]
+    , [Yellow, Red]
+    , [Red, Yellow, Red]
+    , [Yellow]
+    , [Red]
+    , []
+    , []
+    ], Yellow )
+    
+yellowAdvantage :: Game
+yellowAdvantage =
+  ( [ [Red, Yellow]
+    , [Yellow, Red, Yellow]
+    , [Yellow, Red]
+    , [Red]
+    , [Yellow]
+    , []
+    , []
+    ], Red )
+
 -- Test functions using the new game states
 
 testLegalMoves :: IO ()
 testLegalMoves = do
   putStrLn "Legal moves for oneMoveFromEndRedWins:"
   print $ legalMoves oneMoveFromEndRedWins
+ 
   putStrLn "Legal moves for twoMovesFromEndRedWins:"
   print $ legalMoves twoMovesFromEndRedWins
+ 
   putStrLn "Legal moves for fourMovesFromEndTie:"
   print $ legalMoves fourMovesFromEndTie
+ 
   putStrLn "Legal moves for finishedGameRedWins:"
   print $ legalMoves finishedGameRedWins
+ 
   putStrLn "Legal moves for finishedGameTie:"
   print $ legalMoves finishedGameTie
+ 
+  putStrLn "Legal moves for sixMovesFromBeginning:"
+  print $ legalMoves sixMovesFromBeginning
+ 
+  putStrLn "Legal moves for sevenMovesFromBeginning:"
+  print $ legalMoves sevenMovesFromBeginning
+ 
+  putStrLn "Legal moves for redAdvantage:"
+  print $ legalMoves redAdvantage
+ 
+  putStrLn "Legal moves for yellowAdvantage:"
+  print $ legalMoves yellowAdvantage
 
 testWhoWillWin :: IO ()
 testWhoWillWin = do
   putStrLn "Who will win oneMoveFromEndRedWins:"
   print $ whoWillWin oneMoveFromEndRedWins
+  
   putStrLn "Who will win twoMovesFromEndRedWins:"
   print $ whoWillWin twoMovesFromEndRedWins
+ 
   putStrLn "Who will win fourMovesFromEndTie:"
   print $ whoWillWin fourMovesFromEndTie
+ 
   putStrLn "Who will win finishedGameRedWins:"
   print $ whoWillWin finishedGameRedWins
+  
   putStrLn "Who will win finishedGameTie:"
   print $ whoWillWin finishedGameTie
+ 
+  putStrLn "Who will win sixMovesFromBeginning:"
+  print $ whoWillWin sixMovesFromBeginning
+ 
+  putStrLn "Who will win sevenMovesFromBeginning:"
+  print $ whoWillWin sevenMovesFromBeginning
+ 
+  putStrLn "Who will win redAdvantage:"
+  print $ whoWillWin redAdvantage
+ 
+  putStrLn "whowill win yellowAdvantage:"
+  print $ whoWillWin yellowAdvantage
 
 testBestMove :: IO ()
 testBestMove = do
   putStrLn "Best move for oneMoveFromEndRedWins:"
   print $ bestMove oneMoveFromEndRedWins
+  
   putStrLn "Best move for twoMovesFromEndRedWins:"
   print $ bestMove twoMovesFromEndRedWins
+  
   putStrLn "Best move for fourMovesFromEndTie:"
   print $ bestMove fourMovesFromEndTie
+  
   putStrLn "Best move for finishedGameRedWins:"
   print $ bestMove finishedGameRedWins
+ 
   putStrLn "Best move for finishedGameTie:"
   print $ bestMove finishedGameTie
+ 
+  putStrLn "Best move for sixMovesFromBeginning:"
+  print $ bestMove sixMovesFromBeginning
+  
+  putStrLn "Best move for sevenMovesFromBeginning:"
+  print $ bestMove sevenMovesFromBeginning
+  
+  putStrLn "Best move for redAdvantage:"
+  print $ bestMove redAdvantage
+  
+  putStrLn "Best move for  yellowAdvantage:"
+  print $ bestMove yellowAdvantage
+
 
 -- Added a test for whoHasWon/checkWin based on your first file's requirements
 testWhoHasWon :: IO ()
@@ -155,6 +248,18 @@ testRateGame = do
   
   putStrLn "Rating of fourMovesFromEndTie:"
   print $ rateGame fourMovesFromEndTie
+  
+  putStrLn "Rating of sixMovesFromBeginning:"
+  print $ rateGame sixMovesFromBeginning
+  
+  putStrLn "Rating of sevenMovesFromBeginning:"
+  print $ rateGame sevenMovesFromBeginning
+ 
+  putStrLn "Rating of redAdvantage:"
+  print $ rateGame redAdvantage
+ 
+  putStrLn "Rating of yellowAdvantage:"
+  print $ rateGame yellowAdvantage
 
 
 runAllTests :: IO ()
