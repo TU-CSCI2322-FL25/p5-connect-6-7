@@ -21,37 +21,38 @@ safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
 safeHead (x:xs) = Just x
 
-checkList :: [Maybe Color] -> Integer -> Maybe Color -- take a list of colors, ex a column, and return just the color if there are 4 in a row or nothing.
-checkList [] _ = Nothing
-checkList [x] counter = if counter >= 4 then x else Nothing
-checkList (x:y:xs) counter
-    | isNothing x  = checkList (y:xs) 1
-    | x == y       = checkList (y:xs) (counter + 1)
-    | counter >= 4 = x
-    | otherwise    = checkList (y:xs) 1
+
+
+checkList :: [Maybe Color] -> Maybe Color -- taken a list, return if there are four colors in a row.
+checkList [] = Nothing
+checkList [_,_,_] = Nothing
+checkList (Just Red:Just Red:Just Red:Just Red:xs) = Just Red
+checkList (Just Yellow:Just Yellow:Just Yellow:Just Yellow:xs) = Just Yellow
+checkList (_:xs) = checkList xs
+
+
 
 checkWin :: Game -> Maybe Winner  -- run functions to check all columns, rows, and diagonals.
 checkWin (board, color) = case safeHead $ catMaybes [checkVertical board, checkHorizontal board, checkPDiagonal board, checkNDiagonal board] of
                             Just x -> Just $ Player x
-                            _ -> if null $ legalMoves (board, color) then Just Tie else Nothing
+                            _ -> if null $ legalMoves (board, color) then Just Tie else Nothing 
 
 checkVertical :: Board -> Maybe Color
-checkVertical board = let win = catMaybes [checkList (map Just column) 1 | column <- board]
+checkVertical board = let win = catMaybes [checkList (map Just column) | column <- board]
                            in safeHead win
 
 checkHorizontal :: Board -> Maybe Color
-checkHorizontal board = safeHead $ catMaybes [checkList row 1 | row <- rows]
-  where
-    maxHeight = maximum (map length board)
-    rows = [[if row < length col then Just (col !! row) else Nothing | col <- board] | row <- [0..maxHeight-1]]
+checkHorizontal board = let win = catMaybes [checkList (map listToMaybe layer) | layer <- [map (drop n) board | n <- [0..6]]] 
+                                 in safeHead win
 
 checkPDiagonal :: Board -> Maybe Color
-checkPDiagonal board = safeHead $ catMaybes [checkList [safeGet col (row + offset) | (col, offset) <- zip (drop startCol board) [0..]] 1| startCol <- [0..3], row <- [0..5]]
-  where safeGet col idx = if idx < length col then Just (col !! idx) else Nothing
+checkPDiagonal board = let win = catMaybes [checkList ([safeHead $ drop n column | (column, n) <- zip (drop p board) [i..]]) | i <- [0..2], p <- [0..3]]
+                               in safeHead win
 
 checkNDiagonal :: Board -> Maybe Color
-checkNDiagonal board = safeHead $ catMaybes [checkList [safeGet col (row - offset) | (col, offset) <- zip (drop startCol board) [0..]] 1| startCol <- [0..3], row <- [3..5]]
-  where safeGet col idx = if idx >= 0 && idx < length col then Just (col !! idx) else Nothing
+checkNDiagonal board = checkPDiagonal (reverse board)
+
+
 
 --Story 3
 
